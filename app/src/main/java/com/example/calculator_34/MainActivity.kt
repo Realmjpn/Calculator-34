@@ -54,12 +54,15 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnMinus).setOnClickListener { operatorClicked("-") }
         findViewById<Button>(R.id.btnDiv).setOnClickListener { operatorClicked("/") }
         findViewById<Button>(R.id.btnMul).setOnClickListener { operatorClicked("*") }
+        findViewById<Button>(R.id.btnMod).setOnClickListener { operatorClicked("%") }
 
 //        //เชื่อมโยงปุ่มพิเศษ = AC . +-
         findViewById<Button>(R.id.btnEqual).setOnClickListener { calculateResult() }
         findViewById<Button>(R.id.btnAC).setOnClickListener { clearAll() }
         findViewById<Button>(R.id.btnDot).setOnClickListener { addDot() }
         findViewById<Button>(R.id.btnSign).setOnClickListener { toogleSign() }
+        findViewById<Button>(R.id.btnDel).setOnClickListener { backSpace() }
+
     }
     //เมื่อกดปุ่มตัวเลข
     private fun numberClick(value: String){
@@ -88,17 +91,64 @@ class MainActivity : AppCompatActivity() {
                 "-" -> firstNumber - secondNumber
                 "*" -> firstNumber * secondNumber
                 "/" -> if (secondNumber != 0.0) firstNumber / secondNumber else Double.NaN
+                "%" -> if (secondNumber != 0.0) firstNumber % secondNumber else Double.NaN
                 else -> 0.0
             }
             //ถ้าหารด้วย 0
             display.text = if (result.isNaN()) "Cannot divide by zero" else result.toString()
             current = result.toString()
-            display.text = current
             isNewOperation = true
         }
 
     }
+    //ฟังก์ชั่นของปุ่ม AC (all clear)
+    private fun clearAll(){
+        current = ""
+        operator = ""
+        firstNumber = 0.0
+        secondNumber = 0.0
+        result = 0.0
+        display.text = "0"
+        isNewOperation = true
+    }
 
+    //ฟังก์ชั่นเพิ่มจุดทศนิยม (Dot)
+    private fun addDot()
+    {
+        if (!current.contains('.'))
+        {
+            if (current.isEmpty()) current = "0." //ถ้ายังไม่มีเลข ให้เริ่มต้นด้วย 0
+            else current += "."
+            display.text = current
+        }
+    }
+    //ฟังก์ชั่นสลับเครื่องหมายบวกลบ (Sign)
+    private fun toogleSign()
+    {
+        if (current.isNotEmpty() && current != "0")
+        {
+            current = if (current.startsWith("-")) current.substring(1) else "-$current"
+            display.text = current
+        }
+    }
+    //ฟังก์ชั่นลบตัวล่าสุด
+    private fun backSpace()
+    {
+        if (isNewOperation) return //ถ้าจอกำลังแสดงผลลัพธ์ให้ไม่ทำอะไร
+        if (current.isNotEmpty())
+        {
+            current = current.dropLast(1)//ตัดตัวสุดท้ายออก 1 ตัว
+            if (current == "-" ||current.isEmpty())
+            {
+                current = ""
+                display.text = "0"
+            }
+            else
+            {
+                display.text = current
+            }
+        }
+    }
 
 
 }

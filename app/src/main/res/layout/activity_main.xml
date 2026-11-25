@@ -14,7 +14,7 @@
         android:id="@+id/txtDisplay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="67"
+        android:text="0"
         android:padding="16dp"
         android:textColor="@color/black"
         android:gravity="end"
